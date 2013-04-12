@@ -1,1 +1,5 @@
-game: breakout: Implementation of classic game
+title: Breakout
+contributors: denis83 kevin +lfm
+type: game
+repo:ece2524git@ece2524.ece.vt.edu:denis83/project
+description: Implementation of famous console game
