@@ -1,40 +1,39 @@
-#include "brick.h"
+#include "block.h"
 #include <iostream>
 
-Brick::Brick(int x, int y) 
+Block::Block(int x, int y)
 {
-  image.load("brick.png");
+  image.load("block.png");
   destroyed = FALSE;
   rect = image.rect();
   rect.translate(x, y);
 }
 
-Brick::~Brick() {
-
-   std::cout << ("Brick deleted\n");
+Block::~Block()
+{
 }
 
-QRect Brick::getRect()
+QRect Block::getRect()
 {
   return rect;
 }
 
-void Brick::setRect(QRect rct)
+void Block::setRect(QRect rct)
 {
   rect = rct;
 }
 
-QImage & Brick::getImage()
+QImage & Block::getImage()
 {
   return image;
 }
 
-bool Brick::isDestroyed()
+bool Block::isDestroyed()
 {
   return destroyed;
 }
 
-void Brick::setDestroyed(bool destr)
+void Block::setDestroyed(bool destr)
 {
   destroyed = destr;
 }

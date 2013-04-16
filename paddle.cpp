@@ -6,12 +6,11 @@ Paddle::Paddle()
   image.load("paddle.png");
 
   rect = image.rect();
-  resetState();
+  resetPaddleState();
 }
 
 Paddle::~Paddle()
 {
- std::cout << ("Paddle deleted\n");
 }
 
 void Paddle::moveLeft(int left)
@@ -26,7 +25,7 @@ void Paddle::moveRight(int right)
     rect.moveTo(right, rect.top());
 }
 
-void Paddle::resetState()
+void Paddle::resetPaddleState()
 {
   rect.moveTo(200, 360);
 }

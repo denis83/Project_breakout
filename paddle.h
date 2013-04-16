@@ -10,9 +10,7 @@ class Paddle
   public:
     Paddle();
     ~Paddle();
-
-  public:
-    void resetState();
+    void resetPaddleState();
     void moveLeft(int);
     void moveRight(int);
     QRect getRect();

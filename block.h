@@ -1,17 +1,14 @@
-#ifndef BRICK_H
-#define BRICK_H
+#ifndef BLOCK_H
+#define BLOCK_H
 
 #include <QImage>
 #include <QRect>
 
-class Brick
+class Block
 {
   public:
-    Brick(int, int);
-    ~Brick();
-
-  public:
-    void resetState();
+    Block(int, int);
+    ~Block();
     bool isDestroyed();
     void setDestroyed(bool);
     QRect getRect();

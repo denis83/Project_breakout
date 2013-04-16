@@ -10,9 +10,7 @@ class Ball
   public:
     Ball();
     ~Ball();
-
-  public:
-    void resetState();
+    void resetBallState();
     void moveBottom(int);
     void moveTop(int);
     void moveLeft(int);

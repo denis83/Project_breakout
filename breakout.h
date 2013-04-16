@@ -2,7 +2,7 @@
 #define BREAKOUT_H
 
 #include "ball.h"
-#include "brick.h"
+#include "block.h"
 #include "paddle.h"
 #include <QWidget>
 #include <QKeyEvent>
@@ -16,26 +16,8 @@ class Breakout : public QWidget
     ~Breakout();
 
   protected:
-    void paintEvent(QPaintEvent *event);
-    void timerEvent(QTimerEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-
-    void startGame();
-    void pauseGame();
-    void stopGame();
-    void victory();
-    void checkCollision();
 
   private:
-    int x;
-    int timerId;
-    Ball *ball;
-    Paddle *paddle;
-    Brick * bricks[30];
-    bool gameOver;
-    bool gameWon;
-    bool gameStarted;
-    bool paused;
 
 };
 

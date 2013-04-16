@@ -10,7 +10,7 @@ Ball::Ball()
   image.load("ball.png");
 
   rect = image.rect();
-  resetState();
+  resetBallState();
 
 }
 
@@ -36,7 +36,7 @@ void Ball::autoMove()
   }
 }
 
-void Ball::resetState() 
+void Ball::resetBallState()
 {
   rect.moveTo(230, 355);
 }
