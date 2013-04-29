@@ -16,8 +16,26 @@ class Breakout : public QWidget
     ~Breakout();
 
   protected:
+    void paintEvent(QPaintEvent * event);
+    void timerEvent(QTimerEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+
+    void startGame();
+    void pauseGame();
+    void stopGame();
+    void victory();
+    void checkCollision();
 
   private:
+    int x;
+    int timerId;
+    Ball *ball;
+    Paddle *paddle;
+    Block * bricks[30];
+    bool gameOver;
+    bool gameWon;
+    bool gameStarted;
+    bool paused;
 
 };
 

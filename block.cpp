@@ -3,7 +3,7 @@
 
 Block::Block(int x, int y)
 {
-  image.load("block.png");
+  image.load("blue.png");
   destroyed = FALSE;
   rect = image.rect();
   rect.translate(x, y);

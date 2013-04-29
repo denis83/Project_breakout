@@ -27,7 +27,7 @@ void Paddle::moveRight(int right)
 
 void Paddle::resetPaddleState()
 {
-  rect.moveTo(200, 360);
+  rect.moveTo(125, 360);
 }
 
 QRect Paddle::getRect()

@@ -32,8 +32,9 @@ int main(int argc, char *argv[])
   Breakout window;
   
   window.setWindowTitle("Breakout");
-  window.show();
   center(window);
+  window.show();
+
 
   return app.exec();
 }

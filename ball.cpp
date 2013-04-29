@@ -7,7 +7,7 @@ Ball::Ball()
   xdir = 1;
   ydir = -1;
 
-  image.load("ball.png");
+  image.load("bball.png");
 
   rect = image.rect();
   resetBallState();
@@ -38,7 +38,7 @@ void Ball::autoMove()
 
 void Ball::resetBallState()
 {
-  rect.moveTo(230, 355);
+  rect.moveTo(145, 350);
 }
 
 void Ball::moveBottom(int bottom)
