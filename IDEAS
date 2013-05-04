@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 game: breakout
+=======
+title: Breakout
+contributors: denis83 kevin +lfm
+type: game
+repo:ece2524git@ece2524.ece.vt.edu:denis83/project
+description: Implementation of famous console game
+>>>>>>> cef68a74c7d11ef0e6ea3fbf1f73b840a4e07843
