@@ -2,6 +2,8 @@
 #include <QPainter>
 #include <QApplication>
 
+static int level = 0;
+
 Breakout::Breakout(QWidget *parent)
     : QWidget(parent)
 {
@@ -14,14 +16,10 @@ Breakout::Breakout(QWidget *parent)
   ball = new Ball();
   paddle = new Paddle();
 
+  level = 1;
 
-  int k = 0;
-  for (int i=0; i<5; i++) {
-    for (int j=0; j<6; j++) {
-      bricks[k] = new Block(j*40+30, i*12+50);
-      k++; 
-    }
-  }
+  checkLevel();
+
 }
 
 Breakout::~Breakout() {
@@ -30,6 +28,53 @@ Breakout::~Breakout() {
  for (int i=0; i<30; i++) {
    delete bricks[i];
  }
+}
+
+void Breakout::checkLevel()
+{
+    ball->resetBallState();
+    paddle->resetPaddleState();
+
+    if(level == 1)
+    {
+        level = 2;
+        int k = 0;
+        for (int i=0; i<5; i++)
+        {
+          for (int j=0; j<6; j++)
+          {
+            bricks[k] = new Block(j*40+30, i*12+50);
+            k++;
+          }
+        }
+    }
+    else if (level == 2)
+    {
+        level = 3;
+        int k = 0;
+        for (int i=0; i<5; i++)
+        {
+          for (int j=0; j<6; j++)
+          {
+            bricks[k] = new Block(j*40+30, i*20+50);
+            k++;
+          }
+        }
+    }
+    else if (level == 3)
+    {
+        level = 4;
+        int k = 0;
+        for (int i=0; i<10; i++)
+        {
+          for (int j=0; j<3; j++)
+          {
+            bricks[k] = new Block(j*40+30, i*12+50);
+            k++;
+          }
+        }
+    }
+    else victory();
 }
 
 void Breakout::paintEvent(QPaintEvent * event)
@@ -172,7 +217,7 @@ void Breakout::checkCollision()
       j++;
     }
     if (j==30) 
-      victory();
+      checkLevel();
   }
 
   if ((ball->getRect()).intersects(paddle->getRect())) {

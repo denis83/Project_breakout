@@ -25,6 +25,7 @@ class Breakout : public QWidget
     void stopGame();
     void victory();
     void checkCollision();
+    void checkLevel();
 
   private:
     int x;

@@ -1,6 +1,7 @@
 #include "block.h"
 #include <iostream>
 
+
 Block::Block(int x, int y)
 {
   image.load("blue.png");
