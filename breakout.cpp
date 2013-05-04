@@ -35,6 +35,10 @@ Breakout::~Breakout() {
 void Breakout::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);
+  //painter.setBrush(QBrush("#c56c00"));
+  //painter.setBackground(QBrush("#c56c00"));
+  //painter.drawRect(0,0,1000,1000);
+  painter.drawImage(0,0,QImage("bgrndlev1.png"));
 
   if (gameOver) {
     QFont font("Courier", 15, QFont::DemiBold);
@@ -61,15 +65,12 @@ void Breakout::paintEvent(QPaintEvent * event)
     painter.drawText(-textWidth/2, 0, "Victory");
   }
   else {
-    painter.drawImage(ball->getRect(), 
-        ball->getImage());
-    painter.drawImage(paddle->getRect(), 
-        paddle->getImage());
+    painter.drawImage(ball->getRect(),ball->getImage());
+    painter.drawImage(paddle->getRect(),paddle->getImage());
 
     for (int i=0; i<30; i++) {
         if (!bricks[i]->isDestroyed()) 
-          painter.drawImage(bricks[i]->getRect(), 
-              bricks[i]->getImage());
+          painter.drawImage(bricks[i]->getRect(),bricks[i]->getImage());
     }
   }
 }
