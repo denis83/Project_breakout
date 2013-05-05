@@ -21,6 +21,7 @@ class Block
     int position;
     bool destroyed;
 
+
 };
 
 #endif

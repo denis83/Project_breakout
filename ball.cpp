@@ -4,8 +4,8 @@
 Ball::Ball()
 {
 
-  xdir = 1;
-  ydir = -1;
+  xdir = 1.5;
+  ydir = -1.5;
 
   image.load("bball.png");
 
@@ -24,15 +24,15 @@ void Ball::autoMove()
   rect.translate(xdir, ydir);
 
   if (rect.left() == 0) {
-    xdir = 1;
+    xdir = 1.5;
   }
 
   if (rect.right() == 300) {
-    xdir = -1;
+    xdir = -1.5;
   }
 
   if (rect.top() == 0) {
-    ydir = 1;
+    ydir = 1.5;
   }
 }
 

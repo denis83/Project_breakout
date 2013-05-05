@@ -1,7 +1,11 @@
 #include "breakout.h"
 #include <QPainter>
 #include <QApplication>
+#include <QEvent>
+#include <QDebug>
+#include <QString>
 //test
+
 Breakout::Breakout(QWidget *parent)
     : QWidget(parent)
 {
@@ -14,14 +18,11 @@ Breakout::Breakout(QWidget *parent)
   ball = new Ball();
   paddle = new Paddle();
 
+  level = 1;
+  score = 0;
 
-  int k = 0;
-  for (int i=0; i<5; i++) {
-    for (int j=0; j<6; j++) {
-      bricks[k] = new Block(j*40+30, i*12+50);
-      k++; 
-    }
-  }
+  checkLevel();
+
 }
 
 Breakout::~Breakout() {
@@ -32,15 +33,76 @@ Breakout::~Breakout() {
  }
 }
 
+void Breakout::checkLevel()
+{
+    ball->resetBallState();
+    paddle->resetPaddleState();
+    QKeyEvent *event;
+    if(level == 1)
+    {
+        gameStarted=FALSE;
+        level = 2;
+        int k = 0;
+        for (int i=0; i<5; i++)
+        {
+          for (int j=0; j<6; j++)
+          {
+            bricks[k] = new Block(j*40+30, i*12+50);
+            k++;
+          }
+        }
+        //keyPressEvent(event);
+    }
+    else if (level == 2)
+    {
+        gameStarted=FALSE;
+        level = 3;
+        int k = 0;
+        for (int i=0; i<5; i++)
+        {
+          for (int j=0; j<6; j++)
+          {
+            bricks[k] = new Block(j*40+30, i*20+50);
+            k++;
+          }
+        }
+    }
+    else if (level == 3)
+    {
+        gameStarted=FALSE;
+        level = 4;
+        int k = 0;
+        for (int i=0; i<10; i++)
+        {
+          for (int j=0; j<3; j++)
+          {
+            bricks[k] = new Block(j*40+30, i*12+50);
+            k++;
+          }
+        }
+    }
+    else victory();
+}
+
 void Breakout::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);
-  //painter.setBrush(QBrush("#c56c00"));
-  //painter.setBackground(QBrush("#c56c00"));
-  //painter.drawRect(0,0,1000,1000);
-  painter.drawImage(0,0,QImage("bgrndlev1.png"));
+
+  if(level==2)
+      painter.drawImage(0,0,QImage("background1.jpg"));
+  else if(level==3)
+      painter.drawImage(0,0,QImage("background2.jpg"));
+  else
+    painter.drawImage(0,0,QImage("bgrndlev1.png"));
+
+  QPoint point = QPoint(0,10);
+  QPoint point2 = QPoint(240,10);
+  painter.drawText( point, "Level: "+QString::number(level-1));
+  painter.drawText( point2, "Score: " + QString::number(score));
 
   if (gameOver) {
+    painter.drawImage(0,0,QImage("bgrndlev1.png"));
+    painter.drawText( point2, "Score: " + QString::number(score));
     QFont font("Courier", 15, QFont::DemiBold);
     QFontMetrics fm(font);
     int textWidth = fm.width("Game Over");
@@ -53,6 +115,8 @@ void Breakout::paintEvent(QPaintEvent * event)
     painter.drawText(-textWidth/2, 0, "Game Over");
   }
   else if(gameWon) {
+      painter.drawImage(0,0,QImage("bgrndlev1.png"));
+      painter.drawText( point2, "Score: " + QString::number(score));
     QFont font("Courier", 15, QFont::DemiBold);
     QFontMetrics fm(font);
     int textWidth = fm.width("Victory");
@@ -173,7 +237,7 @@ void Breakout::checkCollision()
       j++;
     }
     if (j==30) 
-      victory();
+      checkLevel();
   }
 
   if ((ball->getRect()).intersects(paddle->getRect())) {
@@ -215,7 +279,6 @@ void Breakout::checkCollision()
 
   for (int i=0; i<30; i++) {
     if ((ball->getRect()).intersects(bricks[i]->getRect())) {
-
       int ballLeft = ball->getRect().left();  
       int ballHeight = ball->getRect().height(); 
       int ballWidth = ball->getRect().width();
@@ -244,6 +307,7 @@ void Breakout::checkCollision()
         } 
 
         bricks[i]->setDestroyed(TRUE);
+        score++;
       }
     }
   }
