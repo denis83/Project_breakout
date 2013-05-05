@@ -5,6 +5,9 @@
 
 static int level = 0;
 
+#include <QEvent>
+#include <QDebug>
+#include <QString>
 
 Breakout::Breakout(QWidget *parent)
     : QWidget(parent)
@@ -19,6 +22,7 @@ Breakout::Breakout(QWidget *parent)
   paddle = new Paddle();
 
   level = 1;
+  score = 0;
 
   checkLevel();
 
@@ -36,9 +40,10 @@ void Breakout::checkLevel()
 {
     ball->resetBallState();
     paddle->resetPaddleState();
-
+    QKeyEvent *event;
     if(level == 1)
     {
+        gameStarted=FALSE;
         level = 2;
         int k = 0;
         for (int i=0; i<5; i++)
@@ -49,9 +54,11 @@ void Breakout::checkLevel()
             k++;
           }
         }
+        nextLevel();
     }
     else if (level == 2)
     {
+        gameStarted=FALSE;
         level = 3;
         int k = 0;
         for (int i=0; i<5; i++)
@@ -66,6 +73,7 @@ void Breakout::checkLevel()
     }
     else if (level == 3)
     {
+        gameStarted=FALSE;
         level = 4;
         int k = 0;
         for (int i=0; i<10; i++)
@@ -84,38 +92,37 @@ void Breakout::checkLevel()
 void Breakout::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);
-  painter.drawImage(0,0,QImage("bgrndlev1.png"));
+
+  if(level==2)
+      painter.drawImage(0,0,QImage("background1.jpg"));
+  else if(level==3)
+      painter.drawImage(0,0,QImage("background2.jpg"));
+  else
+    painter.drawImage(0,0,QImage("bgrndlev1.png"));
+
+  QPoint point = QPoint(0,10);
+  QPoint point2 = QPoint(240,10);
+  painter.drawText( point, "Level: "+QString::number(level-1));
+  painter.drawText( point2, "Score: " + QString::number(score));
 
   if (gameOver) {
-    QFont font("Courier", 15, QFont::DemiBold);
-    QFontMetrics fm(font);
-    int textWidth = fm.width("Game Over");
-
-    painter.setFont(font);
-    int h = height();
-    int w = width();
-
-    painter.translate(QPoint(w/2, h/2));
-    painter.drawText(-textWidth/2, 0, "Game Over");
+    painter.drawImage(-45,0,QImage("defeat.jpg"));
+    painter.drawText( point2, "Score: " + QString::number(score));
+    score=0;
+    level=2;
   }
   else if(gameWon) {
-    QFont font("Courier", 15, QFont::DemiBold);
-    QFontMetrics fm(font);
-    int textWidth = fm.width("Victory");
-
-    painter.setFont(font);
-    int h = height();
-    int w = width();
-
-    painter.translate(QPoint(w/2, h/2));
-    painter.drawText(-textWidth/2, 0, "Victory");
+      painter.drawImage(-45,20,QImage("victory.jpg"));
+      painter.drawText( point2, "Score: " + QString::number(score));
+      score=0;
+      level=2;
   }
   else {
     painter.drawImage(ball->getRect(),ball->getImage());
     painter.drawImage(paddle->getRect(),paddle->getImage());
 
     for (int i=0; i<30; i++) {
-        if (!bricks[i]->isDestroyed()) 
+        if (!bricks[i]->isDestroyed())
           painter.drawImage(bricks[i]->getRect(),bricks[i]->getImage());
     }
   }
@@ -274,7 +281,6 @@ void Breakout::checkCollision()
 
   for (int i=0; i<30; i++) {
     if ((ball->getRect()).intersects(bricks[i]->getRect())) {
-
       int ballLeft = ball->getRect().left();  
       int ballHeight = ball->getRect().height(); 
       int ballWidth = ball->getRect().width();
@@ -303,6 +309,7 @@ void Breakout::checkCollision()
         } 
 
         bricks[i]->setDestroyed(TRUE);
+        score++;
       }
     }
   }

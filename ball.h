@@ -28,6 +28,7 @@ class Ball
     int speed;
     int xdir;
     int ydir;
+    int level;
     bool stuck;
     QImage image;
     QRect rect;

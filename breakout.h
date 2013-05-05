@@ -32,6 +32,8 @@ class Breakout : public QWidget
   private:
     int x;
     int timerId;
+    int level;
+    int score;
     Ball *ball;
     Paddle *paddle;
     Block * bricks[30];
