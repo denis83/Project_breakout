@@ -26,6 +26,8 @@ class Breakout : public QWidget
     void victory();
     void checkCollision();
     void checkLevel();
+    void delay(int delaySec);
+    void nextLevel();
 
   private:
     int x;

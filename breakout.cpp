@@ -6,6 +6,10 @@
 #include <QString>
 //test
 
+#include <QTime>
+
+static int level = 0;
+
 Breakout::Breakout(QWidget *parent)
     : QWidget(parent)
 {
@@ -55,7 +59,8 @@ void Breakout::checkLevel()
     }
     else if (level == 2)
     {
-        victory();/*gameStarted=FALSE;
+        {
+       gameStarted=FALSE;
         level = 3;
         int k = 0;
         for (int i=0; i<5; i++)
@@ -65,7 +70,12 @@ void Breakout::checkLevel()
             bricks[k] = new Block(j*40+30, i*20+50);
             k++;
           }
-        }*/
+
+        }
+
+        }
+        nextLevel();
+
     }
     else if (level == 3)
     {
@@ -80,6 +90,7 @@ void Breakout::checkLevel()
             k++;
           }
         }
+        nextLevel();
     }
     else victory();
 }
@@ -87,6 +98,8 @@ void Breakout::checkLevel()
 void Breakout::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);
+
+  painter.drawImage(0,0,QImage("bgrndlev1.png"));
 
   if(level==2)
       painter.drawImage(0,0,QImage("background1.jpg"));
@@ -130,6 +143,12 @@ void Breakout::timerEvent(QTimerEvent *event)
   repaint();
 }
 
+void Breakout::delay(int delaySec)
+{
+    QTime dieTime= QTime::currentTime().addSecs(delaySec);
+    while( QTime::currentTime() < dieTime )
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 
 void Breakout::keyPressEvent(QKeyEvent *event)
@@ -208,6 +227,13 @@ void Breakout::victory()
   killTimer(timerId);
   gameWon = TRUE;  
   gameStarted = FALSE;
+}
+
+void Breakout::nextLevel()
+{
+    killTimer(timerId);
+    gameWon = FALSE;
+    gameStarted = FALSE;
 }
 
 void Breakout::checkCollision()
