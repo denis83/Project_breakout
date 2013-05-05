@@ -1,6 +1,7 @@
 #include "breakout.h"
 #include <QPainter>
 #include <QApplication>
+#include <QTime>
 
 static int level = 0;
 
@@ -61,6 +62,7 @@ void Breakout::checkLevel()
             k++;
           }
         }
+        nextLevel();
     }
     else if (level == 3)
     {
@@ -74,6 +76,7 @@ void Breakout::checkLevel()
             k++;
           }
         }
+        nextLevel();
     }
     else victory();
 }
@@ -81,9 +84,6 @@ void Breakout::checkLevel()
 void Breakout::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);
-  //painter.setBrush(QBrush("#c56c00"));
-  //painter.setBackground(QBrush("#c56c00"));
-  //painter.drawRect(0,0,1000,1000);
   painter.drawImage(0,0,QImage("bgrndlev1.png"));
 
   if (gameOver) {
@@ -128,6 +128,12 @@ void Breakout::timerEvent(QTimerEvent *event)
   repaint();
 }
 
+void Breakout::delay(int delaySec)
+{
+    QTime dieTime= QTime::currentTime().addSecs(delaySec);
+    while( QTime::currentTime() < dieTime )
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 
 void Breakout::keyPressEvent(QKeyEvent *event)
@@ -206,6 +212,13 @@ void Breakout::victory()
   killTimer(timerId);
   gameWon = TRUE;  
   gameStarted = FALSE;
+}
+
+void Breakout::nextLevel()
+{
+    killTimer(timerId);
+    gameWon = FALSE;
+    gameStarted = FALSE;
 }
 
 void Breakout::checkCollision()
