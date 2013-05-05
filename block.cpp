@@ -1,13 +1,14 @@
+//Kevin DiMaria and Denis Pelevin
 #include "block.h"
 #include <iostream>
 
 
-Block::Block(int x, int y)
+Block::Block(int x, int y) //constructor
 {
-  image.load("blue.png");
-  destroyed = FALSE;
+  image.load("blue.png"); //image for the blocks
+  destroyed = FALSE; //boolean to determine if block has been hit or not.
   rect = image.rect();
-  rect.translate(x, y);
+  rect.translate(x, y); //sets the position for each block.
 }
 
 Block::~Block()
@@ -26,15 +27,15 @@ void Block::setRect(QRect rct)
 
 QImage & Block::getImage()
 {
-  return image;
+  return image; //setting block image.
 }
 
 bool Block::isDestroyed()
 {
-  return destroyed;
+  return destroyed; //boolean to determine destroyed or not.
 }
 
 void Block::setDestroyed(bool destr)
 {
-  destroyed = destr;
+  destroyed = destr; //setting the boolean
 }

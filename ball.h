@@ -1,3 +1,4 @@
+//Kevin DiMaria and Denis Pelevin
 #ifndef BALL_H
 #define BALL_H
 
