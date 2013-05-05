@@ -1,7 +1,19 @@
+// ////////////////////////////////////////////////////////
+//
+// Assignment: Final Project - Breakout game
+// File:  main.cpp
+//
+// Authors: Denis Pelevin/Kevin DiMaria
+//
+// Submited on 05/04/2013
+//
+// ///////////////////////////////////////////////////////
+
 #include "breakout.h"
 #include <QDesktopWidget>
 #include <QApplication>
 
+// Sets up winodw size and center coordinates
 void center(QWidget &widget)
 {
   int x, y;
@@ -24,17 +36,19 @@ void center(QWidget &widget)
   widget.setFixedSize(WIDTH, HEIGHT);
 }
 
-
+// main function
 int main(int argc, char *argv[])
 {
   QApplication app(argc, argv);  
     
+  // create window
   Breakout window;
   
+  // show breakout window
   window.setWindowTitle("Breakout");
   center(window);
   window.show();
 
-
+// enter the event loop
   return app.exec();
 }

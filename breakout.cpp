@@ -1,18 +1,30 @@
+// ////////////////////////////////////////////////////////
+//
+// Assignment: Final Project - Breakout game
+// File:  breakout.cpp
+//
+// Authors: Denis Pelevin/Kevin DiMaria
+//
+// Submited on 05/04/2013
+//
+// ///////////////////////////////////////////////////////
+
+//This class provides main game controls.
+//This is also main widget class
+
 #include "breakout.h"
 #include <QPainter>
 #include <QApplication>
-#include <QTime>
-
-static int level = 0;
-
 #include <QEvent>
 #include <QDebug>
 #include <QString>
 
+// Constructor
 Breakout::Breakout(QWidget *parent)
     : QWidget(parent)
 {
 
+  // Reset game flow control flags
   x = 0;
   gameOver = FALSE;
   gameWon = FALSE;
@@ -20,14 +32,14 @@ Breakout::Breakout(QWidget *parent)
   gameStarted = FALSE;
   ball = new Ball();
   paddle = new Paddle();
-
+  //reset the level and the score
   level = 1;
   score = 0;
-
+  // Initiate level check and start of the game
   checkLevel();
-
 }
 
+// Destructor
 Breakout::~Breakout() {
  delete ball;
  delete paddle;
@@ -36,14 +48,15 @@ Breakout::~Breakout() {
  }
 }
 
+// Checks level. Sets up the brick layout according to level number
 void Breakout::checkLevel()
 {
     ball->resetBallState();
     paddle->resetPaddleState();
-    QKeyEvent *event;
+
+    // Layout for level 1. Transition to level 2.
     if(level == 1)
     {
-        gameStarted=FALSE;
         level = 2;
         int k = 0;
         for (int i=0; i<5; i++)
@@ -56,9 +69,10 @@ void Breakout::checkLevel()
         }
         nextLevel();
     }
+
+        // Layout for level 2. Transition to level 3.
     else if (level == 2)
     {
-        gameStarted=FALSE;
         level = 3;
         int k = 0;
         for (int i=0; i<5; i++)
@@ -71,34 +85,44 @@ void Breakout::checkLevel()
         }
         nextLevel();
     }
+        // Layout for level 3. Transition to Victory.
     else if (level == 3)
     {
-        gameStarted=FALSE;
         level = 4;
         int k = 0;
-        for (int i=0; i<10; i++)
+        for (int i=0; i<5; i++)
         {
           for (int j=0; j<3; j++)
           {
-            bricks[k] = new Block(j*40+30, i*12+50);
+            bricks[k] = new Block(j*80+30, i*24+50);
+            k++;
+          }
+        }
+        for (int i=0; i<5; i++)
+        {
+          for (int j=0; j<3; j++)
+          {
+            bricks[k] = new Block(j*80+70, i*24+62);
             k++;
           }
         }
         nextLevel();
     }
-    else victory();
+    else victory(); // Victory screen
 }
 
+// Graphics control using paintEvent.
 void Breakout::paintEvent(QPaintEvent * event)
 {
+   // instance of Qpainter
   QPainter painter(this);
-
+//Background set up for diff levels
   if(level==2)
       painter.drawImage(0,0,QImage("background1.jpg"));
   else if(level==3)
       painter.drawImage(0,0,QImage("background2.jpg"));
   else
-    painter.drawImage(0,0,QImage("bgrndlev1.png"));
+    painter.drawImage(0,0,QImage("background3.jpg"));
 
   QPoint point = QPoint(0,10);
   QPoint point2 = QPoint(240,10);
@@ -128,6 +152,7 @@ void Breakout::paintEvent(QPaintEvent * event)
   }
 }
 
+// Initiation of repaint event based on the timer and collision status
 void Breakout::timerEvent(QTimerEvent *event)
 {
   ball->autoMove();
@@ -135,14 +160,7 @@ void Breakout::timerEvent(QTimerEvent *event)
   repaint();
 }
 
-void Breakout::delay(int delaySec)
-{
-    QTime dieTime= QTime::currentTime().addSecs(delaySec);
-    while( QTime::currentTime() < dieTime )
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-}
-
-
+// Key press event handler
 void Breakout::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
@@ -180,6 +198,7 @@ void Breakout::keyPressEvent(QKeyEvent *event)
     }
 }
 
+// Start of the game flag set up
 void Breakout::startGame()
 { 
   if (!gameStarted) {
@@ -196,6 +215,7 @@ void Breakout::startGame()
   }
 }
 
+//// Pause in the game flag set up
 void Breakout::pauseGame()
 {
   if (paused) {
@@ -207,6 +227,7 @@ void Breakout::pauseGame()
    }
 }
 
+//  Game Over flag set up
 void Breakout::stopGame()
 {
   killTimer(timerId);    
@@ -214,6 +235,7 @@ void Breakout::stopGame()
   gameStarted = FALSE;
 }
 
+// Game won flag set up
 void Breakout::victory()
 {
   killTimer(timerId);
@@ -221,6 +243,7 @@ void Breakout::victory()
   gameStarted = FALSE;
 }
 
+// Next  level flag set up
 void Breakout::nextLevel()
 {
     killTimer(timerId);
@@ -228,6 +251,8 @@ void Breakout::nextLevel()
     gameStarted = FALSE;
 }
 
+// Check for collision with walls, blocks, or paddle
+// Check if the ball breaks the bottom plane for game over
 void Breakout::checkCollision()
 {
 

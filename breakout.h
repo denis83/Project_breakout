@@ -1,3 +1,13 @@
+// ////////////////////////////////////////////////////////
+//
+// Assignment: Final Project - Breakout game
+// File:  breakout.h
+//
+// Authors: Denis Pelevin/Kevin DiMaria
+//
+// Submited on 05/04/2013
+//
+// ///////////////////////////////////////////////////////
 #ifndef BREAKOUT_H
 #define BREAKOUT_H
 
@@ -26,7 +36,6 @@ class Breakout : public QWidget
     void victory();
     void checkCollision();
     void checkLevel();
-    void delay(int delaySec);
     void nextLevel();
 
   private:

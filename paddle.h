@@ -1,3 +1,13 @@
+// ////////////////////////////////////////////////////////
+//
+// Assignment: Final Project - Breakout game
+// File:  paddle.h
+//
+// Authors: Denis Pelevin/Kevin DiMaria
+//
+// Submited on 05/04/2013
+//
+// ///////////////////////////////////////////////////////
 #ifndef PADDLE_H
 #define PADDLE_H
 
