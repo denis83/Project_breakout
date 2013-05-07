@@ -65,16 +65,9 @@ void Breakout::checkLevel()
     if(level == 1)
     {
         setLevel();
-//        int k = 0;
-//        for (int i=0; i<5; i++)
-//        {
-//          for (int j=0; j<6; j++)
-//          {
-//            bricks[k] = new Block(j*40+30, i*12+50);
-//            k++;
-//          }
-//        }
+        level--;
         nextLevel();
+        level++;
     }
 
         // Layout for level 2. Transition to level 3.
@@ -90,7 +83,9 @@ void Breakout::checkLevel()
 //            k++;
 //          }
 //        }
+
         nextLevel();
+
     }
         // Layout for level 3. Transition to Victory.
     else if (level == 3)
@@ -171,7 +166,7 @@ void Breakout::paintEvent(QPaintEvent * event)
 
   QPoint point = QPoint(0,10);
   QPoint point2 = QPoint(240,10);
-  painter.drawText( point, "Level: "+QString::number(level));
+  painter.drawText( point, "Level: "+QString::number(level-1));
   painter.drawText( point2, "Score: " + QString::number(score));
 
   if (gameOver) {
