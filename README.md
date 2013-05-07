@@ -1,7 +1,13 @@
 ####################################### WELCOME ####################################################
 
 Thank you for trying out our Breakout game.
-It was created by Kevin DiMaria and Denis Pelevin.
+It was developed by Kevin DiMaria and Denis Pelevin.
+
+####################################### CREDITS ####################################################
+
+Base code that included inputs/outputs and basic game logic should be credited to creators of
+
+	http://www.zetcode.com/gui/qt4/breakoutgame/
 
 ######################################## IMPORTANT ##################################################
 This particular project was developed using Qt IDE, so if you dont have it installed on your computer it will not compile.

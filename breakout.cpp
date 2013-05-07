@@ -4,6 +4,9 @@
 // File:  breakout.cpp
 //
 // Authors: Denis Pelevin/Kevin DiMaria
+// 
+// Base code that we used was found at 
+// http://www.zetcode.com/gui/qt4/breakoutgame/
 //
 // Submited on 05/04/2013
 //
@@ -18,6 +21,9 @@
 #include <QEvent>
 #include <QDebug>
 #include <QString>
+#include <QFile>
+#include <QTextStream>
+#include <QStringList>
 
 // Constructor
 Breakout::Breakout(QWidget *parent)
@@ -36,6 +42,7 @@ Breakout::Breakout(QWidget *parent)
   level = 1;
   score = 0;
   // Initiate level check and start of the game
+  readInLevels();
   checkLevel();
 }
 
@@ -57,58 +64,101 @@ void Breakout::checkLevel()
     // Layout for level 1. Transition to level 2.
     if(level == 1)
     {
-        level = 2;
-        int k = 0;
-        for (int i=0; i<5; i++)
-        {
-          for (int j=0; j<6; j++)
-          {
-            bricks[k] = new Block(j*40+30, i*12+50);
-            k++;
-          }
-        }
+        setLevel();
+//        int k = 0;
+//        for (int i=0; i<5; i++)
+//        {
+//          for (int j=0; j<6; j++)
+//          {
+//            bricks[k] = new Block(j*40+30, i*12+50);
+//            k++;
+//          }
+//        }
         nextLevel();
     }
 
         // Layout for level 2. Transition to level 3.
     else if (level == 2)
     {
-        level = 3;
-        int k = 0;
-        for (int i=0; i<5; i++)
-        {
-          for (int j=0; j<6; j++)
-          {
-            bricks[k] = new Block(j*40+30, i*20+50);
-            k++;
-          }
-        }
+        setLevel();
+//        int k = 0;
+//        for (int i=0; i<5; i++)
+//        {
+//          for (int j=0; j<6; j++)
+//          {
+//            bricks[k] = new Block(j*40+30, i*20+50);
+//            k++;
+//          }
+//        }
         nextLevel();
     }
         // Layout for level 3. Transition to Victory.
     else if (level == 3)
     {
-        level = 4;
-        int k = 0;
-        for (int i=0; i<5; i++)
-        {
-          for (int j=0; j<3; j++)
-          {
-            bricks[k] = new Block(j*80+30, i*24+50);
-            k++;
-          }
-        }
-        for (int i=0; i<5; i++)
-        {
-          for (int j=0; j<3; j++)
-          {
-            bricks[k] = new Block(j*80+70, i*24+62);
-            k++;
-          }
-        }
+        setLevel();
+//        int k = 0;
+//        for (int i=0; i<5; i++)
+//        {
+//          for (int j=0; j<3; j++)
+//          {
+//            bricks[k] = new Block(j*80+30, i*24+50);
+//            k++;
+//          }
+//        }
+//        for (int i=0; i<5; i++)
+//        {
+//          for (int j=0; j<3; j++)
+//          {
+//            bricks[k] = new Block(j*80+70, i*24+62);
+//            k++;
+//          }
+//        }
         nextLevel();
     }
     else victory(); // Victory screen
+}
+
+void Breakout::readInLevels()
+{
+    QFile levelSetup("lvl.config");
+    levelSetup.open(QIODevice::ReadOnly);
+
+    QTextStream readFile(&levelSetup);
+
+    // read line by line and insert into a QStringList
+    while (!readFile.atEnd())
+    {
+        lvlList << readFile.readLine();
+    }
+
+        levelSetup.close();
+}
+
+void Breakout::setLevel()
+{
+    QString levLine = lvlList[level - 1];
+
+    //extract just the Name
+    QString rowsStr = levLine.split(" ")[1];
+
+    //extract just the Start Time
+    QString columnsStr = levLine.split(" ")[2];
+
+    QString backgroundStr = levLine.split(" ")[3];
+
+    int rows = rowsStr.toInt();
+    int columns = columnsStr.toInt();
+    backGround.load(backgroundStr);
+
+    int k = 0;
+    for (int i=0; i<rows; i++)
+    {
+      for (int j=0; j<columns; j++)
+      {
+        bricks[k] = new Block(j*40+30, i*12+50);
+        k++;
+      }
+    }
 }
 
 // Graphics control using paintEvent.
@@ -116,30 +166,27 @@ void Breakout::paintEvent(QPaintEvent * event)
 {
    // instance of Qpainter
   QPainter painter(this);
-//Background set up for diff levels
-  if(level==2)
-      painter.drawImage(0,0,QImage("background1.jpg"));
-  else if(level==3)
-      painter.drawImage(0,0,QImage("background2.jpg"));
-  else
-    painter.drawImage(0,0,QImage("background3.jpg"));
+
+  painter.drawImage(0,0,backGround);
 
   QPoint point = QPoint(0,10);
   QPoint point2 = QPoint(240,10);
-  painter.drawText( point, "Level: "+QString::number(level-1));
+  painter.drawText( point, "Level: "+QString::number(level));
   painter.drawText( point2, "Score: " + QString::number(score));
 
   if (gameOver) {
     painter.drawImage(-45,0,QImage("defeat.jpg"));
     painter.drawText( point2, "Score: " + QString::number(score));
     score=0;
-    level=2;
+    level=1;
+    setLevel();
   }
   else if(gameWon) {
       painter.drawImage(-45,20,QImage("victory.jpg"));
       painter.drawText( point2, "Score: " + QString::number(score));
       score=0;
-      level=2;
+      level=1;
+      setLevel();
   }
   else {
     painter.drawImage(ball->getRect(),ball->getImage());
@@ -246,6 +293,7 @@ void Breakout::victory()
 // Next  level flag set up
 void Breakout::nextLevel()
 {
+    level++;
     killTimer(timerId);
     gameWon = FALSE;
     gameStarted = FALSE;

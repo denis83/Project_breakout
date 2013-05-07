@@ -4,6 +4,9 @@
 // File:  paddle.cpp
 //
 // Authors: Denis Pelevin/Kevin DiMaria
+// 
+// Base code that we used was found at 
+// http://www.zetcode.com/gui/qt4/breakoutgame/
 //
 // Submited on 05/04/2013
 //

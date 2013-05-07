@@ -4,6 +4,9 @@
 // File:  breakout.h
 //
 // Authors: Denis Pelevin/Kevin DiMaria
+// 
+// Base code that we used was found at 
+// http://www.zetcode.com/gui/qt4/breakoutgame/
 //
 // Submited on 05/04/2013
 //
@@ -37,12 +40,16 @@ class Breakout : public QWidget
     void checkCollision();
     void checkLevel();
     void nextLevel();
+    void readInLevels();
+    void setLevel();
 
   private:
     int x;
     int timerId;
     int level;
     int score;
+    QStringList lvlList;
+    QImage backGround;
     Ball *ball;
     Paddle *paddle;
     Block * bricks[30];
