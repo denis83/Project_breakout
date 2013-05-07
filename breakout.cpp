@@ -32,6 +32,7 @@ Breakout::Breakout(QWidget *parent)
 
   // Reset game flow control flags
   x = 0;
+  count=0;
   gameOver = FALSE;
   gameWon = FALSE;
   paused = FALSE;
@@ -50,7 +51,7 @@ Breakout::Breakout(QWidget *parent)
 Breakout::~Breakout() {
  delete ball;
  delete paddle;
- for (int i=0; i<30; i++) {
+ for (int i=0; i<60; i++) {
    delete bricks[i];
  }
 }
@@ -65,50 +66,15 @@ void Breakout::checkLevel()
     if(level == 1)
     {
         setLevel();
-        level--;
-        nextLevel();
         level++;
+        nextLevel();
+        level--;
     }
-
-        // Layout for level 2. Transition to level 3.
-    else if (level == 2)
+    else if (level <= numOfLevels)
     {
         setLevel();
-//        int k = 0;
-//        for (int i=0; i<5; i++)
-//        {
-//          for (int j=0; j<6; j++)
-//          {
-//            bricks[k] = new Block(j*40+30, i*20+50);
-//            k++;
-//          }
-//        }
-
         nextLevel();
 
-    }
-        // Layout for level 3. Transition to Victory.
-    else if (level == 3)
-    {
-        setLevel();
-//        int k = 0;
-//        for (int i=0; i<5; i++)
-//        {
-//          for (int j=0; j<3; j++)
-//          {
-//            bricks[k] = new Block(j*80+30, i*24+50);
-//            k++;
-//          }
-//        }
-//        for (int i=0; i<5; i++)
-//        {
-//          for (int j=0; j<3; j++)
-//          {
-//            bricks[k] = new Block(j*80+70, i*24+62);
-//            k++;
-//          }
-//        }
-        nextLevel();
     }
     else victory(); // Victory screen
 }
@@ -126,32 +92,62 @@ void Breakout::readInLevels()
         lvlList << readFile.readLine();
     }
 
-        levelSetup.close();
+    levelSetup.close();
+
+    QString imageLine = lvlList[0];
+
+    QString vicImStr = imageLine.split(" ")[0];
+    QString defImStr = imageLine.split(" ")[1];
+
+    QString levImLine = lvlList[1];
+    QString totalLevNumStr = levImLine.split(" ")[0];
+    numOfLevels = totalLevNumStr.toInt();
+
+    victoryImage.load(vicImStr);
+    defeatImage.load(defImStr);
 }
+
+
 
 void Breakout::setLevel()
 {
-    QString levLine = lvlList[level - 1];
+    QString levImLine = lvlList[1];
+    QString backgroundStr = levImLine.split(" ")[level];
 
-    //extract just the Name
-    QString rowsStr = levLine.split(" ")[1];
-
-    //extract just the Start Time
-    QString columnsStr = levLine.split(" ")[2];
-
-    QString backgroundStr = levLine.split(" ")[3];
-
-    int rows = rowsStr.toInt();
-    int columns = columnsStr.toInt();
     backGround.load(backgroundStr);
+    int trueArray[60];
+
+    for(int i=0; i<10; i++)
+    {
+         QString levLine = lvlList[(level-1)*11+3+i];
+
+         for (int a=0; a<6;a++)
+         {
+              QString rowsStr = levLine.split(" ")[a];
+              trueArray[a+i*6] = rowsStr.toInt();
+         }
+    }
+
+    qDebug()<< "true array values:"<< endl;
+    for(int i = 0; i<60; i++)
+    {
+        qDebug() << trueArray[i];
+    }
 
     int k = 0;
-    for (int i=0; i<rows; i++)
+    for (int i=0; i<10; i++)
     {
-      for (int j=0; j<columns; j++)
+      for (int j=0; j<6; j++)
       {
-        bricks[k] = new Block(j*40+30, i*12+50);
-        k++;
+          bricks[k] = new Block(j*40+30, i*12+50);
+
+          if(trueArray[k] == 0)
+          {
+              bricks[k]->setDestroyed(TRUE);
+          }
+          else bricks[k]->setDestroyed(FALSE);
+
+          k++;
       }
     }
 }
@@ -166,28 +162,31 @@ void Breakout::paintEvent(QPaintEvent * event)
 
   QPoint point = QPoint(0,10);
   QPoint point2 = QPoint(240,10);
-  painter.drawText( point, "Level: "+QString::number(level-1));
+
+  painter.drawText( point, "Level: "+QString::number(level-1 + count));
   painter.drawText( point2, "Score: " + QString::number(score));
 
   if (gameOver) {
-    painter.drawImage(-45,0,QImage("defeat.jpg"));
+    painter.drawImage(-45,0,defeatImage);
     painter.drawText( point2, "Score: " + QString::number(score));
     score=0;
     level=1;
+    count=1;
     setLevel();
   }
   else if(gameWon) {
-      painter.drawImage(-45,20,QImage("victory.jpg"));
+      painter.drawImage(-45,20,victoryImage);
       painter.drawText( point2, "Score: " + QString::number(score));
       score=0;
       level=1;
+      count=1;
       setLevel();
   }
   else {
     painter.drawImage(ball->getRect(),ball->getImage());
     painter.drawImage(paddle->getRect(),paddle->getImage());
 
-    for (int i=0; i<30; i++) {
+    for (int i=0; i<60; i++) {
         if (!bricks[i]->isDestroyed())
           painter.drawImage(bricks[i]->getRect(),bricks[i]->getImage());
     }
@@ -247,8 +246,8 @@ void Breakout::startGame()
     ball->resetBallState();
     paddle->resetPaddleState();
 
-    for (int i=0; i<30; i++) {
-      bricks[i]->setDestroyed(FALSE);
+    for (int i=0; i<60; i++) {
+      //bricks[i]->setDestroyed(FALSE);
     }
     gameOver = FALSE; 
     gameWon = FALSE; 
@@ -302,11 +301,11 @@ void Breakout::checkCollision()
   if (ball->getRect().bottom() > 400)
     stopGame(); 
 
-  for (int i=0, j=0; i<30; i++) {
+  for (int i=0, j=0; i<60; i++) {
     if (bricks[i]->isDestroyed()) {
       j++;
     }
-    if (j==30) 
+    if (j==60)
       checkLevel();
   }
 
@@ -347,7 +346,7 @@ void Breakout::checkCollision()
   }
 
 
-  for (int i=0; i<30; i++) {
+  for (int i=0; i<60; i++) {
     if ((ball->getRect()).intersects(bricks[i]->getRect())) {
       int ballLeft = ball->getRect().left();  
       int ballHeight = ball->getRect().height(); 

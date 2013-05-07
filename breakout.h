@@ -47,12 +47,16 @@ class Breakout : public QWidget
     int x;
     int timerId;
     int level;
+    int numOfLevels;
     int score;
+    int count;
     QStringList lvlList;
     QImage backGround;
+    QImage defeatImage;
+    QImage victoryImage;
     Ball *ball;
     Paddle *paddle;
-    Block * bricks[30];
+    Block * bricks[60];
     bool gameOver;
     bool gameWon;
     bool gameStarted;
