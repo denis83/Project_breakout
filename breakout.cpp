@@ -32,6 +32,7 @@ Breakout::Breakout(QWidget *parent)
 
   // Reset game flow control flags
   x = 0;
+  count=0;
   gameOver = FALSE;
   gameWon = FALSE;
   paused = FALSE;
@@ -74,7 +75,9 @@ void Breakout::checkLevel()
 //            k++;
 //          }
 //        }
+        level++;
         nextLevel();
+        level--;
     }
 
         // Layout for level 2. Transition to level 3.
@@ -91,6 +94,7 @@ void Breakout::checkLevel()
 //          }
 //        }
         nextLevel();
+
     }
         // Layout for level 3. Transition to Victory.
     else if (level == 3)
@@ -171,7 +175,7 @@ void Breakout::paintEvent(QPaintEvent * event)
 
   QPoint point = QPoint(0,10);
   QPoint point2 = QPoint(240,10);
-  painter.drawText( point, "Level: "+QString::number(level));
+  painter.drawText( point, "Level: "+QString::number(level-1 + count));
   painter.drawText( point2, "Score: " + QString::number(score));
 
   if (gameOver) {
@@ -179,6 +183,7 @@ void Breakout::paintEvent(QPaintEvent * event)
     painter.drawText( point2, "Score: " + QString::number(score));
     score=0;
     level=1;
+    count=1;
     setLevel();
   }
   else if(gameWon) {

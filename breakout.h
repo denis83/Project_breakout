@@ -48,6 +48,7 @@ class Breakout : public QWidget
     int timerId;
     int level;
     int score;
+    int count;
     QStringList lvlList;
     QImage backGround;
     Ball *ball;
